@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/card.css">
+<link rel="stylesheet" href="../lib/bundle.css">
+<script>
+  // Open overlays focus themselves; without this the showcase scrolls to the card.
+  const focus = HTMLElement.prototype.focus;
+  HTMLElement.prototype.focus = function (options) { focus.call(this, { ...options, preventScroll: true }); };
+  if (window !== window.parent) Element.prototype.scrollIntoView = function () {};
+</script>
+<script src="../lib/react.production.min.js"></script>
+<script src="../lib/react-dom.production.min.js"></script>
+<script src="../lib/bundle.js"></script>
+<title>Accordion</title>
+</head>
+<body>
+<div id="root" class="p-inset-lg font-sans text-foreground"></div>
+<script>
+(function () {
+  var h = React.createElement
+  var ns = window.Throughline
+  with (ns) {
+    ReactDOM.createRoot(document.getElementById('root')).render(h(Accordion,{type:'single',collapsible:true,className:'max-w-md',defaultValue:'a'}, h(AccordionItem,{value:'a'}, h(AccordionTrigger,null,'How does billing work?'), h(AccordionContent,null,'You pay monthly for the seats you use.')), h(AccordionItem,{value:'b'}, h(AccordionTrigger,null,'Can I cancel at any time?'), h(AccordionContent,null,'Yes; your plan runs to the end of the month.'))))
+  }
+  
+})()
+</script>
+
+</body>
+</html>
