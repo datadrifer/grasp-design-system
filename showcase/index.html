@@ -1421,22 +1421,26 @@ a { color: inherit; }
   }
 }
 .side-logo { height: var(--ctl-sm); width: auto; }
-.side-nav { flex: 1; overflow-y: auto; padding-bottom: var(--sp-stack-lg); scrollbar-width: thin; }
+.side-nav { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--sp-inset-xs) var(--sp-stack-lg) 0; scrollbar-width: thin; }
 .side-tree, .side-list { list-style: none; margin: 0; padding: 0; }
-.side-group + .side-group { margin-top: var(--sp-stack-xs); }
+.side-group { padding-block: var(--sp-inset-xs); border-top: var(--stroke-hairline) solid var(--border); }
+.side-group:first-child { border-top: 0; padding-top: 0; }
 .side-link {
   display: block;
-  padding-block: var(--sp-optical);
-  font-size: var(--text-small);
-  line-height: var(--text-small--line-height);
+  padding: var(--sp-optical) var(--sp-inset-xs);
+  border-radius: var(--r-sm);
   color: var(--text-secondary);
   text-decoration: none;
-  transition: color var(--duration-quick) var(--ease-standard);
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+  transition: background-color var(--duration-quick) var(--ease-standard), color var(--duration-quick) var(--ease-standard);
 }
-.side-link:hover, .side-link[aria-current] { color: var(--foreground); }
-.side-link-1 { font-weight: var(--weight-semibold); color: var(--foreground); }
-.side-link-3 { padding-left: var(--sp-inset-md); }
-.side-link[aria-current='true'] { font-weight: var(--weight-semibold); }
+.side-link:hover { background: var(--muted); color: var(--foreground); }
+.side-link:focus-visible { outline: var(--stroke-hairline) solid var(--ring); outline-offset: 0; }
+.side-link-1 { color: var(--ink-heading); font-weight: var(--weight-eyebrow); }
+.side-link-3 { padding-left: var(--sp-inset-lg); color: var(--text-secondary); }
+.side-link[aria-current="true"] { background: var(--muted); color: var(--interactive); font-weight: var(--weight-eyebrow); }
+.side-link-1[aria-current="section"] { color: var(--interactive); }
 
 /* ---- Sections */
 .section { padding-top: var(--sp-section); }
@@ -1462,10 +1466,17 @@ a { color: inherit; }
   overflow-wrap: anywhere;
 }
 .md-small { font-size: var(--text-small); line-height: var(--text-small--line-height); }
-.table-wrap { overflow-x: auto; margin: 0 0 var(--sp-inset-md); }
-.md table { border-collapse: collapse; font-size: var(--text-small); line-height: var(--text-small--line-height); }
-.md th, .md td { padding: var(--sp-inset-xs) var(--sp-inset-md) var(--sp-inset-xs) 0; border-bottom: var(--stroke-hairline) solid var(--divider); text-align: left; vertical-align: top; }
-.md th { font-weight: var(--weight-semibold); }
+.table-wrap {
+  margin: 0 0 var(--sp-inset-lg);
+  overflow-x: auto;
+  border: var(--stroke-hairline) solid var(--border);
+  border-radius: var(--r-containers);
+}
+.md table { width: 100%; border-collapse: collapse; font-size: var(--text-small); line-height: var(--text-small--line-height); }
+.md th, .md td { padding: var(--sp-inset-xs) var(--sp-inset-md); text-align: left; vertical-align: top; }
+.md th { background: var(--card); color: var(--ink-heading); font-weight: var(--weight-eyebrow); white-space: nowrap; }
+.md td { border-top: var(--stroke-hairline) solid var(--border); }
+.md td code { white-space: nowrap; }
 
 /* ---- The close: one green band with a request to copy */
 .close {
@@ -1584,38 +1595,43 @@ a { color: inherit; }
 
 /* ---- Token groups */
 .token-group + .token-group, .type-rows + .token-group, .scales .token-group + .token-group { margin-top: var(--sp-stack-lg); }
+.token-group { display: flex; flex-direction: column; gap: var(--sp-stack-sm); min-width: 0; }
 .token-group-title {
+  margin: 0;
   display: flex;
   align-items: baseline;
   gap: var(--sp-inset-xs);
-  margin: 0 0 var(--sp-stack-xs);
-  font-family: var(--font-sans);
-  font-size: var(--text-body);
-  line-height: var(--text-body--line-height);
+  font-size: var(--text-lead);
+  line-height: var(--text-lead--line-height);
   font-weight: var(--weight-semibold);
+  color: var(--ink-heading);
 }
-.token-count { font-weight: var(--weight-regular); color: var(--text-secondary); }
+.token-count { font-size: var(--text-small); font-weight: var(--text-body--font-weight); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 
-/* Colour: a chip over its name, hex and use */
-.swatches {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ms-xs)), 1fr));
-  gap: var(--sp-stack-sm) var(--sp-stack-xs);
-  font-size: var(--text-small);
-}
-.swatch { display: flex; flex-direction: column; gap: var(--sp-optical); min-width: 0; }
+/* Colour: one table per group, a chip beside each value (ported from the IA showcase) */
+.swatches { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: var(--text-small); line-height: var(--text-small--line-height); }
+.swatches th, .swatches td { padding: var(--sp-inset-xs) var(--sp-inset-md); text-align: left; vertical-align: middle; }
+.swatches thead th { background: var(--card); color: var(--ink-heading); font-weight: var(--weight-eyebrow); white-space: nowrap; }
+.swatches tbody th, .swatches tbody td { border-top: var(--stroke-hairline) solid var(--border); }
+.swatches thead th:nth-child(1) { width: 24%; }
+.swatches thead th:nth-child(2), .swatches thead th:nth-child(3) { width: 16%; }
+.swatch-name { font-family: var(--font-sans); font-weight: var(--text-body--font-weight); color: var(--ink-heading); white-space: nowrap; }
+.swatch-value { display: inline-flex; align-items: center; gap: var(--sp-inset-xs); font-family: var(--font-sans); font-variant-numeric: tabular-nums; color: var(--foreground); white-space: nowrap; }
+.swatch-value-dark { color: var(--text-secondary); }
+.swatch-text { display: flex; flex-direction: column; }
+.swatch-text { align-items: flex-start; gap: var(--sp-hairline); }
+.swatch-hex { padding: 0 var(--sp-optical); border-radius: var(--r-inline); background: var(--muted); }
+.swatch-ref { font-family: var(--font-sans); font-size: var(--text-caption); line-height: var(--text-caption--line-height); color: var(--text-secondary); }
 .swatch-chip {
-  height: var(--ctl-xl);
-  margin-bottom: var(--sp-optical);
-  border-radius: var(--r-inline);
+  flex: none;
+  width: var(--ctl-2xs);
+  height: var(--ctl-2xs);
   border: var(--stroke-hairline) solid var(--border);
+  border-radius: var(--r-chip);
 }
-.swatch-name { font-size: var(--text-small); line-height: var(--text-small--line-height); font-weight: var(--weight-semibold); overflow-wrap: anywhere; }
-.swatch-hex, .swatch-usage { font-size: var(--text-small); line-height: var(--text-small--line-height); color: var(--text-secondary); }
-.swatch-ref::before { content: ' · '; }
+.swatch-name { overflow-wrap: anywhere; white-space: normal; }
+.swatch-usage { color: var(--text-secondary); }
+.table-wrap:has(.swatches) .swatches { min-width: calc(var(--sp-section) * 7); }
 
 /* Type: each style in itself */
 .type-rows { border-top: var(--stroke-hairline) solid var(--divider); }
@@ -2027,722 +2043,757 @@ Use them only as a student&#39;s marks on an idea, exactly as the files draw the
       
       <div class="token-group" id="colour-palette">
         <h3 class="token-group-title">Palette <span class="token-count">40</span></h3>
-        <ul class="swatches">
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffeb"></span>
-            <span class="swatch-name">palette-base-color-lumen</span>
-            <span class="swatch-hex">#ffffeb</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffeb"></span>
-            <span class="swatch-name">palette-text-color-text-secondary</span>
-            <span class="swatch-hex">#ffffeb</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">palette-text-color-text-primary</span>
-            <span class="swatch-hex">#1a1a1a</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">palette-border-color-border-secondary</span>
-            <span class="swatch-hex">#1a1a1a</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#e4e4d0"></span>
-            <span class="swatch-name">palette-base-color-lumen-dark</span>
-            <span class="swatch-hex">#e4e4d0</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f7f5ee"></span>
-            <span class="swatch-name">palette-background-color-background-primary</span>
-            <span class="swatch-hex">#f7f5ee</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f0d7ff"></span>
-            <span class="swatch-name">palette-background-color-background-secondary</span>
-            <span class="swatch-hex">#f0d7ff</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">palette-background-color-background-tertiary</span>
-            <span class="swatch-hex">#1a1a1a</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#075148"></span>
-            <span class="swatch-name">palette-base-color-fathom</span>
-            <span class="swatch-hex">#075148</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffa946"></span>
-            <span class="swatch-name">palette-base-color-glow</span>
-            <span class="swatch-hex">#ffa946</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">palette-base-color-vast</span>
-            <span class="swatch-hex">#1a1a1a</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f0d7ff"></span>
-            <span class="swatch-name">palette-base-color-dawn</span>
-            <span class="swatch-hex">#f0d7ff</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">palette-background-color-background-alternate</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">palette-base-color-white</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ff6c4c"></span>
-            <span class="swatch-name">palette-base-color-flare</span>
-            <span class="swatch-hex">#ff6c4c</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f0d7ff"></span>
-            <span class="swatch-name">palette-text-color-text-tertiary</span>
-            <span class="swatch-hex">#f0d7ff</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#7f1c34"></span>
-            <span class="swatch-name">palette-base-color-pulse</span>
-            <span class="swatch-hex">#7f1c34</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#cef5ca"></span>
-            <span class="swatch-name">palette-base-color-system-success-green</span>
-            <span class="swatch-hex">#cef5ca</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffbcf2"></span>
-            <span class="swatch-name">palette-base-color-signal</span>
-            <span class="swatch-hex">#ffbcf2</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f8e4e4"></span>
-            <span class="swatch-name">palette-base-color-system-error-red</span>
-            <span class="swatch-hex">#f8e4e4</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">palette-text-color-text-alternate</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#cef5ca"></span>
-            <span class="swatch-name">palette-background-color-background-success</span>
-            <span class="swatch-hex">#cef5ca</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#7f1c34"></span>
-            <span class="swatch-name">palette-base-color-system-error-red-dark</span>
-            <span class="swatch-hex">#7f1c34</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#666666"></span>
-            <span class="swatch-name">palette-base-color-neutral-neutral</span>
-            <span class="swatch-hex">#666666</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#114e0b"></span>
-            <span class="swatch-name">palette-text-color-text-success</span>
-            <span class="swatch-hex">#114e0b</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">palette-base-color-neutral-white</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#fcf8d8"></span>
-            <span class="swatch-name">palette-base-color-system-warning-yellow</span>
-            <span class="swatch-hex">#fcf8d8</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f0d7ff"></span>
-            <span class="swatch-name">palette-link-color-link-primary</span>
-            <span class="swatch-hex">#f0d7ff</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#111111"></span>
-            <span class="swatch-name">palette-base-color-neutral-neutral-darkest</span>
-            <span class="swatch-hex">#111111</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f8e4e4"></span>
-            <span class="swatch-name">palette-background-color-background-error</span>
-            <span class="swatch-hex">#f8e4e4</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#7f1c34"></span>
-            <span class="swatch-name">palette-text-color-text-error</span>
-            <span class="swatch-hex">#7f1c34</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#fcf8d8"></span>
-            <span class="swatch-name">palette-background-color-background-warning</span>
-            <span class="swatch-hex">#fcf8d8</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#5e5515"></span>
-            <span class="swatch-name">palette-text-color-text-warning</span>
-            <span class="swatch-hex">#5e5515</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#cccccc"></span>
-            <span class="swatch-name">palette-base-color-neutral-neutral-lighter</span>
-            <span class="swatch-hex">#cccccc</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#222222"></span>
-            <span class="swatch-name">palette-base-color-neutral-neutral-darker</span>
-            <span class="swatch-hex">#222222</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#114e0b"></span>
-            <span class="swatch-name">palette-base-color-system-success-green-dark</span>
-            <span class="swatch-hex">#114e0b</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#5e5515"></span>
-            <span class="swatch-name">palette-base-color-system-warning-yellow-dark</span>
-            <span class="swatch-hex">#5e5515</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffd84a"></span>
-            <span class="swatch-name">palette-base-color-sun</span>
-            <span class="swatch-hex">#ffd84a</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffd7bc"></span>
-            <span class="swatch-name">palette-base-color-peach</span>
-            <span class="swatch-hex">#ffd7bc</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffd727"></span>
-            <span class="swatch-name">palette-base-color-marker</span>
-            <span class="swatch-hex">#ffd727</span>
-            <span class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</span>
-          </li>
-        </ul>
+        <div class="table-wrap">
+          <table class="swatches">
+            <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Where it goes</th></tr></thead>
+            <tbody>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-lumen</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffeb"></span><span class="swatch-text"><span class="swatch-hex">#ffffeb</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffeb"></span><span class="swatch-text"><span class="swatch-hex">#ffffeb</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-text-color-text-secondary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffeb"></span><span class="swatch-text"><span class="swatch-hex">#ffffeb</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffeb"></span><span class="swatch-text"><span class="swatch-hex">#ffffeb</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-text-color-text-primary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-border-color-border-secondary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-lumen-dark</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#e4e4d0"></span><span class="swatch-text"><span class="swatch-hex">#e4e4d0</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#e4e4d0"></span><span class="swatch-text"><span class="swatch-hex">#e4e4d0</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-background-color-background-primary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f7f5ee"></span><span class="swatch-text"><span class="swatch-hex">#f7f5ee</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f7f5ee"></span><span class="swatch-text"><span class="swatch-hex">#f7f5ee</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-background-color-background-secondary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-background-color-background-tertiary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-fathom</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#075148"></span><span class="swatch-text"><span class="swatch-hex">#075148</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#075148"></span><span class="swatch-text"><span class="swatch-hex">#075148</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-glow</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffa946"></span><span class="swatch-text"><span class="swatch-hex">#ffa946</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffa946"></span><span class="swatch-text"><span class="swatch-hex">#ffa946</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-vast</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-dawn</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-background-color-background-alternate</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-white</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-flare</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ff6c4c"></span><span class="swatch-text"><span class="swatch-hex">#ff6c4c</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ff6c4c"></span><span class="swatch-text"><span class="swatch-hex">#ff6c4c</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-text-color-text-tertiary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-pulse</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#7f1c34"></span><span class="swatch-text"><span class="swatch-hex">#7f1c34</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#7f1c34"></span><span class="swatch-text"><span class="swatch-hex">#7f1c34</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-system-success-green</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#cef5ca"></span><span class="swatch-text"><span class="swatch-hex">#cef5ca</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cef5ca"></span><span class="swatch-text"><span class="swatch-hex">#cef5ca</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-signal</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffbcf2"></span><span class="swatch-text"><span class="swatch-hex">#ffbcf2</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffbcf2"></span><span class="swatch-text"><span class="swatch-hex">#ffbcf2</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-system-error-red</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f8e4e4"></span><span class="swatch-text"><span class="swatch-hex">#f8e4e4</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f8e4e4"></span><span class="swatch-text"><span class="swatch-hex">#f8e4e4</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-text-color-text-alternate</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-background-color-background-success</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#cef5ca"></span><span class="swatch-text"><span class="swatch-hex">#cef5ca</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cef5ca"></span><span class="swatch-text"><span class="swatch-hex">#cef5ca</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-system-error-red-dark</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#7f1c34"></span><span class="swatch-text"><span class="swatch-hex">#7f1c34</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#7f1c34"></span><span class="swatch-text"><span class="swatch-hex">#7f1c34</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-neutral-neutral</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#666666"></span><span class="swatch-text"><span class="swatch-hex">#666666</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#666666"></span><span class="swatch-text"><span class="swatch-hex">#666666</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-text-color-text-success</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#114e0b"></span><span class="swatch-text"><span class="swatch-hex">#114e0b</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#114e0b"></span><span class="swatch-text"><span class="swatch-hex">#114e0b</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-neutral-white</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-system-warning-yellow</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#fcf8d8"></span><span class="swatch-text"><span class="swatch-hex">#fcf8d8</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#fcf8d8"></span><span class="swatch-text"><span class="swatch-hex">#fcf8d8</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-link-color-link-primary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-neutral-neutral-darkest</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#111111"></span><span class="swatch-text"><span class="swatch-hex">#111111</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#111111"></span><span class="swatch-text"><span class="swatch-hex">#111111</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-background-color-background-error</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f8e4e4"></span><span class="swatch-text"><span class="swatch-hex">#f8e4e4</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f8e4e4"></span><span class="swatch-text"><span class="swatch-hex">#f8e4e4</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-text-color-text-error</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#7f1c34"></span><span class="swatch-text"><span class="swatch-hex">#7f1c34</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#7f1c34"></span><span class="swatch-text"><span class="swatch-hex">#7f1c34</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-background-color-background-warning</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#fcf8d8"></span><span class="swatch-text"><span class="swatch-hex">#fcf8d8</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#fcf8d8"></span><span class="swatch-text"><span class="swatch-hex">#fcf8d8</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-text-color-text-warning</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#5e5515"></span><span class="swatch-text"><span class="swatch-hex">#5e5515</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#5e5515"></span><span class="swatch-text"><span class="swatch-hex">#5e5515</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-neutral-neutral-lighter</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#cccccc"></span><span class="swatch-text"><span class="swatch-hex">#cccccc</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cccccc"></span><span class="swatch-text"><span class="swatch-hex">#cccccc</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-neutral-neutral-darker</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#222222"></span><span class="swatch-text"><span class="swatch-hex">#222222</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#222222"></span><span class="swatch-text"><span class="swatch-hex">#222222</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-system-success-green-dark</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#114e0b"></span><span class="swatch-text"><span class="swatch-hex">#114e0b</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#114e0b"></span><span class="swatch-text"><span class="swatch-hex">#114e0b</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-system-warning-yellow-dark</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#5e5515"></span><span class="swatch-text"><span class="swatch-hex">#5e5515</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#5e5515"></span><span class="swatch-text"><span class="swatch-hex">#5e5515</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-sun</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffd84a"></span><span class="swatch-text"><span class="swatch-hex">#ffd84a</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffd84a"></span><span class="swatch-text"><span class="swatch-hex">#ffd84a</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-peach</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffd7bc"></span><span class="swatch-text"><span class="swatch-hex">#ffd7bc</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffd7bc"></span><span class="swatch-text"><span class="swatch-hex">#ffd7bc</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">palette-base-color-marker</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffd727"></span><span class="swatch-text"><span class="swatch-hex">#ffd727</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffd727"></span><span class="swatch-text"><span class="swatch-hex">#ffd727</span></span></span></td>
+              <td class="swatch-usage">Brand palette colour: illustration, data and the occasional panel; never body text or the page ground.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="token-group" id="colour-brand-and-action">
         <h3 class="token-group-title">Brand and action <span class="token-count">11</span></h3>
-        <ul class="swatches">
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f0d7ff"></span>
-            <span class="swatch-name">primary</span>
-            <span class="swatch-hex">#f0d7ff<span class="swatch-ref">palette-background-color-background-secondary</span></span>
-            <span class="swatch-usage">The main action and links: one emphasis per view.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">primary-foreground</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">Text and icons on primary.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f8edff"></span>
-            <span class="swatch-name">brand-muted</span>
-            <span class="swatch-hex">#f8edff</span>
-            <span class="swatch-usage">The brand muted role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#075148"></span>
-            <span class="swatch-name">brand-base</span>
-            <span class="swatch-hex">#075148<span class="swatch-ref">palette-base-color-fathom</span></span>
-            <span class="swatch-usage">The brand base role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#075148"></span>
-            <span class="swatch-name">brand-strong</span>
-            <span class="swatch-hex">#075148<span class="swatch-ref">palette-base-color-fathom</span></span>
-            <span class="swatch-usage">The brand strong role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#6b3487"></span>
-            <span class="swatch-name">brand-emphasis</span>
-            <span class="swatch-hex">#6b3487</span>
-            <span class="swatch-usage">The brand emphasis role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffeb"></span>
-            <span class="swatch-name">brand-contrast</span>
-            <span class="swatch-hex">#ffffeb<span class="swatch-ref">palette-base-color-lumen</span></span>
-            <span class="swatch-usage">The brand contrast role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">interactive</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">The interactive role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffeb"></span>
-            <span class="swatch-name">interactive-foreground</span>
-            <span class="swatch-hex">#ffffeb<span class="swatch-ref">palette-base-color-lumen</span></span>
-            <span class="swatch-usage">Text and icons on interactive.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f8edff"></span>
-            <span class="swatch-name">interactive-muted</span>
-            <span class="swatch-hex">#f8edff</span>
-            <span class="swatch-usage">The interactive muted role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">ring</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">Focus rings.</span>
-          </li>
-        </ul>
+        <div class="table-wrap">
+          <table class="swatches">
+            <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Where it goes</th></tr></thead>
+            <tbody>
+            <tr>
+              <th scope="row" class="swatch-name">primary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span><span class="swatch-ref">palette-background-color-background-secondary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#8e48b1"></span><span class="swatch-text"><span class="swatch-hex">#8e48b1</span></span></span></td>
+              <td class="swatch-usage">The main action and links: one emphasis per view.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">primary-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td class="swatch-usage">Text and icons on primary.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">brand-muted</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f8edff"></span><span class="swatch-text"><span class="swatch-hex">#f8edff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#2c113a"></span><span class="swatch-text"><span class="swatch-hex">#2c113a</span></span></span></td>
+              <td class="swatch-usage">The brand muted role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">brand-base</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#075148"></span><span class="swatch-text"><span class="swatch-hex">#075148</span><span class="swatch-ref">palette-base-color-fathom</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#8e48b1"></span><span class="swatch-text"><span class="swatch-hex">#8e48b1</span></span></span></td>
+              <td class="swatch-usage">The brand base role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">brand-strong</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#075148"></span><span class="swatch-text"><span class="swatch-hex">#075148</span><span class="swatch-ref">palette-base-color-fathom</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#8e48b1"></span><span class="swatch-text"><span class="swatch-hex">#8e48b1</span></span></span></td>
+              <td class="swatch-usage">The brand strong role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">brand-emphasis</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#6b3487"></span><span class="swatch-text"><span class="swatch-hex">#6b3487</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#6b3487"></span><span class="swatch-text"><span class="swatch-hex">#6b3487</span></span></span></td>
+              <td class="swatch-usage">The brand emphasis role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">brand-contrast</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffeb"></span><span class="swatch-text"><span class="swatch-hex">#ffffeb</span><span class="swatch-ref">palette-base-color-lumen</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td class="swatch-usage">The brand contrast role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">interactive</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cc8dee"></span><span class="swatch-text"><span class="swatch-hex">#cc8dee</span></span></span></td>
+              <td class="swatch-usage">The interactive role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">interactive-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffeb"></span><span class="swatch-text"><span class="swatch-hex">#ffffeb</span><span class="swatch-ref">palette-base-color-lumen</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on interactive.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">interactive-muted</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f8edff"></span><span class="swatch-text"><span class="swatch-hex">#f8edff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#2c113a"></span><span class="swatch-text"><span class="swatch-hex">#2c113a</span></span></span></td>
+              <td class="swatch-usage">The interactive muted role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">ring</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cc8dee"></span><span class="swatch-text"><span class="swatch-hex">#cc8dee</span></span></span></td>
+              <td class="swatch-usage">Focus rings.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="token-group" id="colour-surfaces">
         <h3 class="token-group-title">Surfaces <span class="token-count">19</span></h3>
-        <ul class="swatches">
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f7f5ee"></span>
-            <span class="swatch-name">background</span>
-            <span class="swatch-hex">#f7f5ee<span class="swatch-ref">palette-background-color-background-primary</span></span>
-            <span class="swatch-usage">Page background.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">foreground</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">Body text on background.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f9f9f9"></span>
-            <span class="swatch-name">canvas</span>
-            <span class="swatch-hex">#f9f9f9</span>
-            <span class="swatch-usage">The canvas role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">surface</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">The surface role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">surface-raised</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">The surface raised role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">surface-overlay</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">The surface overlay role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f2f2f2"></span>
-            <span class="swatch-name">surface-sunken</span>
-            <span class="swatch-hex">#f2f2f2</span>
-            <span class="swatch-usage">The surface sunken role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ede7dd"></span>
-            <span class="swatch-name">card</span>
-            <span class="swatch-hex">#ede7dd</span>
-            <span class="swatch-usage">Cards and panels on the page.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">card-foreground</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">Text on card.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">popover</span>
-            <span class="swatch-hex">#ffffff<span class="swatch-ref">palette-background-color-background-alternate</span></span>
-            <span class="swatch-usage">Menus, popovers and dialogs.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1f1f1f"></span>
-            <span class="swatch-name">popover-foreground</span>
-            <span class="swatch-hex">#1f1f1f</span>
-            <span class="swatch-usage">Text on popover.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f7f5ee"></span>
-            <span class="swatch-name">secondary</span>
-            <span class="swatch-hex">#f7f5ee<span class="swatch-ref">palette-background-color-background-primary</span></span>
-            <span class="swatch-usage">Secondary actions.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">secondary-foreground</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">Text on secondary.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#e4e4d0"></span>
-            <span class="swatch-name">muted</span>
-            <span class="swatch-hex">#e4e4d0<span class="swatch-ref">palette-base-color-lumen-dark</span></span>
-            <span class="swatch-usage">Quiet fills: inputs at rest, table stripes.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#5f5f59"></span>
-            <span class="swatch-name">muted-foreground</span>
-            <span class="swatch-hex">#5f5f59</span>
-            <span class="swatch-usage">Secondary text, captions, placeholders.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f0d7ff"></span>
-            <span class="swatch-name">accent</span>
-            <span class="swatch-hex">#f0d7ff<span class="swatch-ref">palette-background-color-background-secondary</span></span>
-            <span class="swatch-usage">Hover and selected fills.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">accent-foreground</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">Text on accent.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">inverse-surface</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">The inverse surface role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffeb"></span>
-            <span class="swatch-name">inverse-foreground</span>
-            <span class="swatch-hex">#ffffeb<span class="swatch-ref">palette-base-color-lumen</span></span>
-            <span class="swatch-usage">Text and icons on inverse.</span>
-          </li>
-        </ul>
+        <div class="table-wrap">
+          <table class="swatches">
+            <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Where it goes</th></tr></thead>
+            <tbody>
+            <tr>
+              <th scope="row" class="swatch-name">background</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f7f5ee"></span><span class="swatch-text"><span class="swatch-hex">#f7f5ee</span><span class="swatch-ref">palette-background-color-background-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Page background.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td class="swatch-usage">Body text on background.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">canvas</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">The canvas role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">surface</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td class="swatch-usage">The surface role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">surface-raised</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">The surface raised role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">surface-overlay</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">The surface overlay role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">surface-sunken</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f2f2f2"></span><span class="swatch-text"><span class="swatch-hex">#f2f2f2</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">The surface sunken role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">card</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ede7dd"></span><span class="swatch-text"><span class="swatch-hex">#ede7dd</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td class="swatch-usage">Cards and panels on the page.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">card-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td class="swatch-usage">Text on card.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">popover</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span><span class="swatch-ref">palette-background-color-background-alternate</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td class="swatch-usage">Menus, popovers and dialogs.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">popover-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td class="swatch-usage">Text on popover.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">secondary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f7f5ee"></span><span class="swatch-text"><span class="swatch-hex">#f7f5ee</span><span class="swatch-ref">palette-background-color-background-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">Secondary actions.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">secondary-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td class="swatch-usage">Text on secondary.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">muted</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#e4e4d0"></span><span class="swatch-text"><span class="swatch-hex">#e4e4d0</span><span class="swatch-ref">palette-base-color-lumen-dark</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">Quiet fills: inputs at rest, table stripes.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">muted-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#5f5f59"></span><span class="swatch-text"><span class="swatch-hex">#5f5f59</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ababab"></span><span class="swatch-text"><span class="swatch-hex">#ababab</span></span></span></td>
+              <td class="swatch-usage">Secondary text, captions, placeholders.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">accent</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f0d7ff"></span><span class="swatch-text"><span class="swatch-hex">#f0d7ff</span><span class="swatch-ref">palette-background-color-background-secondary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">Hover and selected fills.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">accent-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td class="swatch-usage">Text on accent.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">inverse-surface</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#b8b8b8"></span><span class="swatch-text"><span class="swatch-hex">#b8b8b8</span></span></span></td>
+              <td class="swatch-usage">The inverse surface role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">inverse-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffeb"></span><span class="swatch-text"><span class="swatch-hex">#ffffeb</span><span class="swatch-ref">palette-base-color-lumen</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on inverse.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="token-group" id="colour-ink-and-lines">
         <h3 class="token-group-title">Ink and lines <span class="token-count">8</span></h3>
-        <ul class="swatches">
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#d1d1c1"></span>
-            <span class="swatch-name">border</span>
-            <span class="swatch-hex">#d1d1c1</span>
-            <span class="swatch-usage">Container edges and dividers.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#d1d1c1"></span>
-            <span class="swatch-name">input</span>
-            <span class="swatch-hex">#d1d1c1</span>
-            <span class="swatch-usage">Input outlines.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#d1d1c1"></span>
-            <span class="swatch-name">divider</span>
-            <span class="swatch-hex">#d1d1c1</span>
-            <span class="swatch-usage">The divider role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#5f5f59"></span>
-            <span class="swatch-name">text-secondary</span>
-            <span class="swatch-hex">#5f5f59</span>
-            <span class="swatch-usage">Supporting text.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#6d6d6d"></span>
-            <span class="swatch-name">text-tertiary</span>
-            <span class="swatch-hex">#6d6d6d</span>
-            <span class="swatch-usage">The text tertiary role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">ink-heading</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">The ink heading role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1a1a1a"></span>
-            <span class="swatch-name">ink-display</span>
-            <span class="swatch-hex">#1a1a1a<span class="swatch-ref">palette-text-color-text-primary</span></span>
-            <span class="swatch-usage">The ink display role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#5f5f59"></span>
-            <span class="swatch-name">ink-eyebrow</span>
-            <span class="swatch-hex">#5f5f59</span>
-            <span class="swatch-usage">The ink eyebrow role.</span>
-          </li>
-        </ul>
+        <div class="table-wrap">
+          <table class="swatches">
+            <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Where it goes</th></tr></thead>
+            <tbody>
+            <tr>
+              <th scope="row" class="swatch-name">border</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#d1d1c1"></span><span class="swatch-text"><span class="swatch-hex">#d1d1c1</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">Container edges and dividers.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">input</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#d1d1c1"></span><span class="swatch-text"><span class="swatch-hex">#d1d1c1</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#515151"></span><span class="swatch-text"><span class="swatch-hex">#515151</span></span></span></td>
+              <td class="swatch-usage">Input outlines.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">divider</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#d1d1c1"></span><span class="swatch-text"><span class="swatch-hex">#d1d1c1</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">The divider role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">text-secondary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#5f5f59"></span><span class="swatch-text"><span class="swatch-hex">#5f5f59</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cecece"></span><span class="swatch-text"><span class="swatch-hex">#cecece</span></span></span></td>
+              <td class="swatch-usage">Supporting text.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">text-tertiary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#6d6d6d"></span><span class="swatch-text"><span class="swatch-hex">#6d6d6d</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ababab"></span><span class="swatch-text"><span class="swatch-hex">#ababab</span></span></span></td>
+              <td class="swatch-usage">The text tertiary role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">ink-heading</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#b8b8b8"></span><span class="swatch-text"><span class="swatch-hex">#b8b8b8</span></span></span></td>
+              <td class="swatch-usage">The ink heading role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">ink-display</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1a1a1a"></span><span class="swatch-text"><span class="swatch-hex">#1a1a1a</span><span class="swatch-ref">palette-text-color-text-primary</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#b8b8b8"></span><span class="swatch-text"><span class="swatch-hex">#b8b8b8</span></span></span></td>
+              <td class="swatch-usage">The ink display role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">ink-eyebrow</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#5f5f59"></span><span class="swatch-text"><span class="swatch-hex">#5f5f59</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#85857f"></span><span class="swatch-text"><span class="swatch-hex">#85857f</span></span></span></td>
+              <td class="swatch-usage">The ink eyebrow role.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="token-group" id="colour-status">
         <h3 class="token-group-title">Status <span class="token-count">20</span></h3>
-        <ul class="swatches">
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#7f1c34"></span>
-            <span class="swatch-name">destructive</span>
-            <span class="swatch-hex">#7f1c34<span class="swatch-ref">palette-base-color-pulse</span></span>
-            <span class="swatch-usage">Errors and destructive actions.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">destructive-foreground</span>
-            <span class="swatch-hex">#ffffff<span class="swatch-ref">palette-background-color-background-alternate</span></span>
-            <span class="swatch-usage">Text on destructive.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f8e4e4"></span>
-            <span class="swatch-name">destructive-muted</span>
-            <span class="swatch-hex">#f8e4e4<span class="swatch-ref">palette-base-color-system-error-red</span></span>
-            <span class="swatch-usage">The destructive muted role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#b93553"></span>
-            <span class="swatch-name">destructive-solid</span>
-            <span class="swatch-hex">#b93553</span>
-            <span class="swatch-usage">The destructive solid role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">destructive-solid-foreground</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Text and icons on destructive-solid.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#114e0b"></span>
-            <span class="swatch-name">success</span>
-            <span class="swatch-hex">#114e0b<span class="swatch-ref">palette-text-color-text-success</span></span>
-            <span class="swatch-usage">Success states.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">success-foreground</span>
-            <span class="swatch-hex">#ffffff<span class="swatch-ref">palette-background-color-background-alternate</span></span>
-            <span class="swatch-usage">Text and icons on success.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#cef5ca"></span>
-            <span class="swatch-name">success-muted</span>
-            <span class="swatch-hex">#cef5ca<span class="swatch-ref">palette-base-color-system-success-green</span></span>
-            <span class="swatch-usage">The success muted role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#238319"></span>
-            <span class="swatch-name">success-solid</span>
-            <span class="swatch-hex">#238319</span>
-            <span class="swatch-usage">The success solid role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">success-solid-foreground</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Text and icons on success-solid.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#5e5515"></span>
-            <span class="swatch-name">warning</span>
-            <span class="swatch-hex">#5e5515<span class="swatch-ref">palette-text-color-text-warning</span></span>
-            <span class="swatch-usage">Warning states.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">warning-foreground</span>
-            <span class="swatch-hex">#ffffff<span class="swatch-ref">palette-background-color-background-alternate</span></span>
-            <span class="swatch-usage">Text and icons on warning.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#fcf8d8"></span>
-            <span class="swatch-name">warning-muted</span>
-            <span class="swatch-hex">#fcf8d8<span class="swatch-ref">palette-base-color-system-warning-yellow</span></span>
-            <span class="swatch-usage">The warning muted role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#796e1e"></span>
-            <span class="swatch-name">warning-solid</span>
-            <span class="swatch-hex">#796e1e</span>
-            <span class="swatch-usage">The warning solid role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">warning-solid-foreground</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Text and icons on warning-solid.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#6b3487"></span>
-            <span class="swatch-name">info</span>
-            <span class="swatch-hex">#6b3487</span>
-            <span class="swatch-usage">Informational states.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">info-foreground</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Text and icons on info.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f8edff"></span>
-            <span class="swatch-name">info-muted</span>
-            <span class="swatch-hex">#f8edff</span>
-            <span class="swatch-usage">The info muted role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#8e48b1"></span>
-            <span class="swatch-name">info-solid</span>
-            <span class="swatch-hex">#8e48b1</span>
-            <span class="swatch-usage">The info solid role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">info-solid-foreground</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Text and icons on info-solid.</span>
-          </li>
-        </ul>
+        <div class="table-wrap">
+          <table class="swatches">
+            <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Where it goes</th></tr></thead>
+            <tbody>
+            <tr>
+              <th scope="row" class="swatch-name">destructive</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#7f1c34"></span><span class="swatch-text"><span class="swatch-hex">#7f1c34</span><span class="swatch-ref">palette-base-color-pulse</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f38594"></span><span class="swatch-text"><span class="swatch-hex">#f38594</span></span></span></td>
+              <td class="swatch-usage">Errors and destructive actions.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">destructive-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span><span class="swatch-ref">palette-background-color-background-alternate</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text on destructive.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">destructive-muted</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f8e4e4"></span><span class="swatch-text"><span class="swatch-hex">#f8e4e4</span><span class="swatch-ref">palette-base-color-system-error-red</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#3d0915"></span><span class="swatch-text"><span class="swatch-hex">#3d0915</span></span></span></td>
+              <td class="swatch-usage">The destructive muted role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">destructive-solid</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#b93553"></span><span class="swatch-text"><span class="swatch-hex">#b93553</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#e24d6c"></span><span class="swatch-text"><span class="swatch-hex">#e24d6c</span></span></span></td>
+              <td class="swatch-usage">The destructive solid role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">destructive-solid-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on destructive-solid.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">success</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#114e0b"></span><span class="swatch-text"><span class="swatch-hex">#114e0b</span><span class="swatch-ref">palette-text-color-text-success</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#70c267"></span><span class="swatch-text"><span class="swatch-hex">#70c267</span></span></span></td>
+              <td class="swatch-usage">Success states.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">success-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span><span class="swatch-ref">palette-background-color-background-alternate</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on success.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">success-muted</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#cef5ca"></span><span class="swatch-text"><span class="swatch-hex">#cef5ca</span><span class="swatch-ref">palette-base-color-system-success-green</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#052803"></span><span class="swatch-text"><span class="swatch-hex">#052803</span></span></span></td>
+              <td class="swatch-usage">The success muted role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">success-solid</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#238319"></span><span class="swatch-text"><span class="swatch-hex">#238319</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#70c267"></span><span class="swatch-text"><span class="swatch-hex">#70c267</span></span></span></td>
+              <td class="swatch-usage">The success solid role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">success-solid-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on success-solid.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">warning</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#5e5515"></span><span class="swatch-text"><span class="swatch-hex">#5e5515</span><span class="swatch-ref">palette-text-color-text-warning</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#998b28"></span><span class="swatch-text"><span class="swatch-hex">#998b28</span></span></span></td>
+              <td class="swatch-usage">Warning states.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">warning-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span><span class="swatch-ref">palette-background-color-background-alternate</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on warning.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">warning-muted</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#fcf8d8"></span><span class="swatch-text"><span class="swatch-hex">#fcf8d8</span><span class="swatch-ref">palette-base-color-system-warning-yellow</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#242004"></span><span class="swatch-text"><span class="swatch-hex">#242004</span></span></span></td>
+              <td class="swatch-usage">The warning muted role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">warning-solid</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#796e1e"></span><span class="swatch-text"><span class="swatch-hex">#796e1e</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#998b28"></span><span class="swatch-text"><span class="swatch-hex">#998b28</span></span></span></td>
+              <td class="swatch-usage">The warning solid role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">warning-solid-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on warning-solid.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">info</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#6b3487"></span><span class="swatch-text"><span class="swatch-hex">#6b3487</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cc8dee"></span><span class="swatch-text"><span class="swatch-hex">#cc8dee</span></span></span></td>
+              <td class="swatch-usage">Informational states.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">info-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on info.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">info-muted</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f8edff"></span><span class="swatch-text"><span class="swatch-hex">#f8edff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#2c113a"></span><span class="swatch-text"><span class="swatch-hex">#2c113a</span></span></span></td>
+              <td class="swatch-usage">The info muted role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">info-solid</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#8e48b1"></span><span class="swatch-text"><span class="swatch-hex">#8e48b1</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cc8dee"></span><span class="swatch-text"><span class="swatch-hex">#cc8dee</span></span></span></td>
+              <td class="swatch-usage">The info solid role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">info-solid-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#0a0a0a"></span><span class="swatch-text"><span class="swatch-hex">#0a0a0a</span></span></span></td>
+              <td class="swatch-usage">Text and icons on info-solid.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="token-group" id="colour-charts">
         <h3 class="token-group-title">Charts <span class="token-count">5</span></h3>
-        <ul class="swatches">
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#b061d8"></span>
-            <span class="swatch-name">chart-1</span>
-            <span class="swatch-hex">#b061d8</span>
-            <span class="swatch-usage">Data series 1.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#e24d6c"></span>
-            <span class="swatch-name">chart-2</span>
-            <span class="swatch-hex">#e24d6c</span>
-            <span class="swatch-usage">Data series 2.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#36a42c"></span>
-            <span class="swatch-name">chart-3</span>
-            <span class="swatch-hex">#36a42c</span>
-            <span class="swatch-usage">Data series 3.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#998b28"></span>
-            <span class="swatch-name">chart-4</span>
-            <span class="swatch-hex">#998b28</span>
-            <span class="swatch-usage">Data series 4.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#8a8a8a"></span>
-            <span class="swatch-name">chart-5</span>
-            <span class="swatch-hex">#8a8a8a</span>
-            <span class="swatch-usage">Data series 5.</span>
-          </li>
-        </ul>
+        <div class="table-wrap">
+          <table class="swatches">
+            <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Where it goes</th></tr></thead>
+            <tbody>
+            <tr>
+              <th scope="row" class="swatch-name">chart-1</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#b061d8"></span><span class="swatch-text"><span class="swatch-hex">#b061d8</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cc8dee"></span><span class="swatch-text"><span class="swatch-hex">#cc8dee</span></span></span></td>
+              <td class="swatch-usage">Data series 1.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">chart-2</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#e24d6c"></span><span class="swatch-text"><span class="swatch-hex">#e24d6c</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f38594"></span><span class="swatch-text"><span class="swatch-hex">#f38594</span></span></span></td>
+              <td class="swatch-usage">Data series 2.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">chart-3</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#36a42c"></span><span class="swatch-text"><span class="swatch-hex">#36a42c</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#70c267"></span><span class="swatch-text"><span class="swatch-hex">#70c267</span></span></span></td>
+              <td class="swatch-usage">Data series 3.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">chart-4</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#998b28"></span><span class="swatch-text"><span class="swatch-hex">#998b28</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#bead34"></span><span class="swatch-text"><span class="swatch-hex">#bead34</span></span></span></td>
+              <td class="swatch-usage">Data series 4.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">chart-5</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#8a8a8a"></span><span class="swatch-text"><span class="swatch-hex">#8a8a8a</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ababab"></span><span class="swatch-text"><span class="swatch-hex">#ababab</span></span></span></td>
+              <td class="swatch-usage">Data series 5.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="token-group" id="colour-product-ui">
         <h3 class="token-group-title">Product UI <span class="token-count">11</span></h3>
-        <ul class="swatches">
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1f1f1f"></span>
-            <span class="swatch-name">prompt-bar</span>
-            <span class="swatch-hex">#1f1f1f</span>
-            <span class="swatch-usage">The prompt bar role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">prompt-bar-foreground</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Text and icons on prompt-bar.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#515151"></span>
-            <span class="swatch-name">prompt-bar-line</span>
-            <span class="swatch-hex">#515151</span>
-            <span class="swatch-usage">The prompt bar line role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">sidebar</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">The sidebar role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1f1f1f"></span>
-            <span class="swatch-name">sidebar-foreground</span>
-            <span class="swatch-hex">#1f1f1f</span>
-            <span class="swatch-usage">Text and icons on sidebar.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#8e48b1"></span>
-            <span class="swatch-name">sidebar-primary</span>
-            <span class="swatch-hex">#8e48b1</span>
-            <span class="swatch-usage">The sidebar primary role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#ffffff"></span>
-            <span class="swatch-name">sidebar-primary-foreground</span>
-            <span class="swatch-hex">#ffffff</span>
-            <span class="swatch-usage">Text and icons on sidebar-primary.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#f2f2f2"></span>
-            <span class="swatch-name">sidebar-accent</span>
-            <span class="swatch-hex">#f2f2f2</span>
-            <span class="swatch-usage">The sidebar accent role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#1f1f1f"></span>
-            <span class="swatch-name">sidebar-accent-foreground</span>
-            <span class="swatch-hex">#1f1f1f</span>
-            <span class="swatch-usage">Text and icons on sidebar-accent.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#e3e3e3"></span>
-            <span class="swatch-name">sidebar-border</span>
-            <span class="swatch-hex">#e3e3e3</span>
-            <span class="swatch-usage">The sidebar border role.</span>
-          </li>
-          <li class="swatch">
-            <span class="swatch-chip" style="background:#6b3487"></span>
-            <span class="swatch-name">sidebar-ring</span>
-            <span class="swatch-hex">#6b3487</span>
-            <span class="swatch-usage">The sidebar ring role.</span>
-          </li>
-        </ul>
+        <div class="table-wrap">
+          <table class="swatches">
+            <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Where it goes</th></tr></thead>
+            <tbody>
+            <tr>
+              <th scope="row" class="swatch-name">prompt-bar</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td class="swatch-usage">The prompt bar role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">prompt-bar-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td class="swatch-usage">Text and icons on prompt-bar.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">prompt-bar-line</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#515151"></span><span class="swatch-text"><span class="swatch-hex">#515151</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cecece"></span><span class="swatch-text"><span class="swatch-hex">#cecece</span></span></span></td>
+              <td class="swatch-usage">The prompt bar line role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">sidebar</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td class="swatch-usage">The sidebar role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">sidebar-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td class="swatch-usage">Text and icons on sidebar.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">sidebar-primary</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#8e48b1"></span><span class="swatch-text"><span class="swatch-hex">#8e48b1</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#8e48b1"></span><span class="swatch-text"><span class="swatch-hex">#8e48b1</span></span></span></td>
+              <td class="swatch-usage">The sidebar primary role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">sidebar-primary-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#ffffff"></span><span class="swatch-text"><span class="swatch-hex">#ffffff</span></span></span></td>
+              <td class="swatch-usage">Text and icons on sidebar-primary.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">sidebar-accent</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#f2f2f2"></span><span class="swatch-text"><span class="swatch-hex">#f2f2f2</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">The sidebar accent role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">sidebar-accent-foreground</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#1f1f1f"></span><span class="swatch-text"><span class="swatch-hex">#1f1f1f</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#f9f9f9"></span><span class="swatch-text"><span class="swatch-hex">#f9f9f9</span></span></span></td>
+              <td class="swatch-usage">Text and icons on sidebar-accent.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">sidebar-border</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#e3e3e3"></span><span class="swatch-text"><span class="swatch-hex">#e3e3e3</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#373737"></span><span class="swatch-text"><span class="swatch-hex">#373737</span></span></span></td>
+              <td class="swatch-usage">The sidebar border role.</td>
+            </tr>
+            <tr>
+              <th scope="row" class="swatch-name">sidebar-ring</th>
+              <td><span class="swatch-value"><span class="swatch-chip" style="background:#6b3487"></span><span class="swatch-text"><span class="swatch-hex">#6b3487</span></span></span></td>
+              <td><span class="swatch-value swatch-value-dark"><span class="swatch-chip" style="background:#cc8dee"></span><span class="swatch-text"><span class="swatch-hex">#cc8dee</span></span></span></td>
+              <td class="swatch-usage">The sidebar ring role.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
